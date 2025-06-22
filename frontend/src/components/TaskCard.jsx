@@ -1,13 +1,13 @@
 import './TaskCard.css'
 
-export default function TaskCard(props) { //onChange={() => onToggleComplete(props.task)}
+export default function TaskCard(props) {
 
     return (
         <div key={props.task.key} id="taskCard" className='taskCard'>
             <div id='taskNameContainer' className='taskNameContainer'>
                 <span id='checkBox'>
-                    <input type='checkbox' checked={props.task.completed} />  
-                </span> 
+                    <input type='checkbox' checked={props.task.completed} />
+                </span>
                 <span id='taskName'>{props.task.title}</span>
             </div>
             <div id="cardActions" className='cardActions'>

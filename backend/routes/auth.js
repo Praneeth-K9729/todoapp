@@ -2,8 +2,8 @@ const authRouter = require('express').Router();
 const authController = require('../controllers/authController');
 const { authLimiter } = require('../middlewares/rateLimiterMiddleware');
 
-authRouter.post('/signup', authController.signup);
+authRouter.post('/signup', authLimiter, authController.signup);
 
-authRouter.post('/login', authController.login);
+authRouter.post('/login', authLimiter, authController.login);
 
 module.exports = authRouter;

@@ -11,7 +11,7 @@ const todoSchema = new mongoose.Schema({
     },
     createdBy: {
         type: String,
-        // required: true
+        required: true
     }
 })
 

@@ -2,6 +2,7 @@ import './TaskList.css'
 import TaskCard from '../components/TaskCard'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function TaskList() {
     const [tasks, setTasks] = useState([])
@@ -9,6 +10,8 @@ export default function TaskList() {
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState('create'); //create or edit
     const [currentTask, setCurrentTask] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('/todos')
@@ -21,6 +24,7 @@ export default function TaskList() {
                 console.error('Failed to load tasks:', error.message)
             })
     }, [])
+
 
     const handleEdit = (task) => {
         setModalType('edit');
@@ -60,29 +64,23 @@ export default function TaskList() {
         setCurrentTask(null);
     }
 
-    //
-    const handleToggleComplete = async (task) => {
-        try {
-            const res = await axios.patch(`/todos/toggle/${task._id}`);
-            const updatedTodo = res.data.updatedTodo;
-
-            setTasks(prevTasks => prevTasks.map(t => t._id === updatedTodo._id ? updatedTodo : t));
-        } catch (error) {
-            console.error('Failed to toggle todo:', error.message);
-        }
-    };
-
-
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login', { replace: true });
+    }
+    const username = JSON.parse(localStorage.getItem('user'))?.user?.username || 'randomUser'
     return (
         <>
             <div id="ancestorContainer" className="ancestorContainer">
                 <div id="header" className='header'>
                     My Tasks
                     <button onClick={handleCreate} className="createTaskButton">Create Task</button>
+                    <button onClick={handleLogout} className='logoutButton'>Logout</button>
+                    Logged in user: {username}
                 </div>
                 {tasks.length > 0 ? (
                     tasks?.map((task, index) => (
-                        <TaskCard key={index} task={task} onEdit={handleEdit} onDelete={handleDelete} /> //onToggleComplete={handleToggleComplete} 
+                        <TaskCard key={index} task={task} onEdit={handleEdit} onDelete={handleDelete} />
                     ))
                 ) : (
                     <div id='noTasks' className='noTasks'> No Task to display</div>

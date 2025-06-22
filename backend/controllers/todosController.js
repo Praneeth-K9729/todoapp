@@ -3,7 +3,7 @@ const Todos = require('../models/todosModel')
 
 exports.getAllTodos = async (req, res) => {
     try {
-        const todos = await Todos.find();
+        const todos = await Todos.find({ createdBy: req.user });
         return res.status(200).send({ todos: todos });
     } catch (error) {
         console.error(`Error fetching all todos:`, error.message)
@@ -29,7 +29,7 @@ exports.getTodoById = async (req, res) => {
 exports.createTodo = async (req, res) => {
     const title = req.body.title;
     try {
-        const newTodo = new Todos({ title: title })
+        const newTodo = new Todos({ title: title, createdBy: req.user })
         const savedTodo = await newTodo.save();
         return res.status(201).send({ newTodo: savedTodo })
     } catch (error) {
@@ -65,21 +65,3 @@ exports.deleteTodo = async (req, res) => {
         return res.status(500).send({ error: 'Error deleting todo' });
     }
 }
-
-/* exports.toggleTodo = async (req, res) => {
-    const id = req.params.id;
-    try {
-        const toggledTodo = await Todos.findById(id);
-        if (!toggledTodo) {
-            return res.status(404).send({ error: 'Todo toggling unsuccessful' });
-        }
-
-        toggledTodo.completed = !toggledTodo.completed;
-        await toggledTodo.save();
-
-        return res.status(200).send({message: 'Todo toggled successfully',updatedTodo: toggledTodo});
-    } catch (error) {
-        console.error('Error toggling todo:', error.message);
-        return res.status(500).send({ error: 'Error toggling todo' });
-    }
-}; */
